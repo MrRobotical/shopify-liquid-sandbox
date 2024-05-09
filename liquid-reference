@@ -1,337 +1,565 @@
-{{ sections-tutorial.css | asset_url | stylesheet_tag }}
+{# Introduction #}
+Liquid is a templating language used in Shopify themes to build dynamic content.
 
-<p>Hello World!</p>
+{# Variables #}
+{% assign name = "John" %}
+Hello, {{ name }}! {# Output: Hello, John! #}
 
-<h2>Text Setting</h2>
-<p>{{ section.settings.text_setting }}</p>
+{# Comments #}
+{# This is a comment. It won't be rendered. #}
 
-<h2>Textarea Setting</h2>
-<p>{{ section.settings.textarea_setting | newline_to_br }}</p>
+{# Strings #}
+{% assign greeting = "Hello, World!" %}
+{{ greeting }} {# Output: Hello, World! #}
 
-<h3>Richtext Setting</h3>
-<div>{{ section.settings.richtext_setting | newline_to_br }}</div>
+{# Numbers #}
+{% assign num = 42 %}
+{{ num }} {# Output: 42 #}
 
-<h2>Number Setting</h2>
-<p>{{ section.settings.number_setting }}</p>
+{# Booleans #}
+{% assign is_true = true %}
+{% assign is_false = false %}
 
-<h2>Range Setting</h2>
-<p>{{ section.settings.range_setting }}</p>
+{# Nil/Null #}
+{% assign null_var = nil %}
+{% if null_var == nil %}
+  Null variable is nil.
+{% endif %}
 
-<h2>Select Setting</h2>
-<p>{{ section.settings.select_setting }}</p>
+{# Arrays #}
+{% assign fruits = "apple, banana, cherry" | split: ", " %}
+{% for fruit in fruits %}
+  {{ fruit }}
+{% endfor %} {# Output: apple banana cherry #}
 
-<h2>Checkbox Setting</h2>
-{% if section.settings.checkbox_setting %}
-  <p>{{ section.settings.checkbox_setting }}</p>
+{# Objects #}
+{% assign user = {"name": "John", "age": 30} %}
+Name: {{ user.name }}, Age: {{ user.age }}
+
+{# Capture #}
+{% capture welcome_message %}
+  Hello, {{ name }}!
+{% endcapture %}
+{{ welcome_message }} {# Output: Hello, John! #}
+
+{# Conditionals #}
+{% if name == "John" %}
+  Hello, John!
+{% endif %}
+
+{# Comparison operators #}
+{% if num > 50 %}
+  Number is greater than 50.
+{% endif %}
+
+{# The unless tag #}
+{% unless name == "John" %}
+  Hello, someone else!
+{% endunless %}
+
+{# Logical Operators #}
+{% if is_true and is_false %}
+  Both are true.
+{% endif %}
+
+{# Operator Precedence #}
+{% if (num > 10 and num < 50) or num == 100 %}
+  Number is between 10 and 50, or it's 100.
+{% endif %}
+
+{# The case tag #}
+{% case name %}
+  {% when "John" %}
+    Hello, John!
+  {% when "Jane" %}
+    Hello, Jane!
+  {% else %}
+    Hello, Stranger!
+{% endcase %}
+
+{# The blank keyword #}
+{% if name.blank? %}
+  Name is blank.
+{% endif %}
+
+{# Truthy and falsy values #}
+{% if name %}
+  Name is truthy.
+{% endif %}
+
+{# Looping #}
+{% for i in (1..5) %}
+  {{ i }}
+{% endfor %} {# Output: 12345 #}
+
+{# Forloop variables #}
+{% for product in collection.products %}
+  {{ forloop.index }}: {{ product.title }}
+{% endfor %}
+
+{# Forloop else #}
+{% for product in collection.products %}
+  {{ product.title }}
 {% else %}
-  <p>Checkbox is false!</p>
-{% endif %}
-
-<h2>Radio Setting</h2>
-<p>{{ section.settings.radio_setting }}</p>
-
-<h2>Color Picker</h2>
-<p style="color:{{ section.settings.color_setting }}">{{ section.settings.color_setting }}</p>
-
-<div style="background: {{section.settings.color_background_setting   }}">
-  <h2>Color Background Setting</h2>
-  <p>{{ section.settings.color_background_setting }}</p>
-</div>
-
-{% if section.settings.image_picker_setting %}
-  <h2>Image Picker</h2>
-  {{ section.settings.image_picker_setting | image_url: width: 250 | image_tag }}
-{% endif %}
-
-<div>
-  <h2>Video Picker</h2>
-  {{ section.settings.video_setting | video_tag: controls: true, style: 'height:400px; width: 400px' }}
-</div>
-
-<div>
-  <h2>Video URL Picker</h2>
-  <iframe
-    width="560"
-    height="315"
-    src="https://www.youtube.com/embed/{{section.settings.video_url_setting }}"
-    title="YouTube video player"
-    frameborder="0"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-    referrerpolicy="strict-origin-when-cross-origin"
-    allowfullscreen
-  ></iframe>
-</div>
-
-<h2>URL Setting</h2>
-<a href="{{ section.settings.url_setting }}">Chosen URL Link</a>
-
-<h2>HTML Setting</h2>
-<div>
-  {{ section.settings.html_setting }}
-</div>
-
-<h2>Liquid Setting</h2>
-<div>
-  {{ section.settings.liquid_setting }}
-</div>
-
-<h2>Product Setting</h2>
-<p>{{ section.settings.product_setting.title }} - {{ section.settings.product_setting.price | money }}</p>
-{{ section.settings.product_setting.featured_image | image_url: width: 250 | image_tag }}
-
-<h2>Product List Setting</h2>
-{% for product in section.settings.product_list_setting %}
-  <p>
-    {{ product }} | {{ product.title }}
-    {{ section.settings.product_list_setting.price | money }}
-  </p>
+  No products found.
 {% endfor %}
 
-<h2>Collection Setting</h2>
-<p>{{ section.settings.collection }} | {{ section.settings.collection.title }} - {{ collection.products.size }}</p>
-
-<h2>Collection List Setting</h2>
-{% for collection in section.settings.collcetion_list_setting %}
-  <p>
-    {{ collection.handle }} | {{ collection.title }} -
-    {{ collection.products.size | money }}
-  </p>
+{# Forloop parameters #}
+{% for product in collection.products limit:5 offset:2 %}
+  {{ product.title }}
 {% endfor %}
 
-<h2>Page Setting</h2>
-<p>{{ section.settings.page_setting.title }}</p>
-
-<h2>Article Setting</h2>
-<p>{{ section.settings.article_setting.title }}</p>
-
-<h2>Blog Setting</h2>
-<p>{{ section.settings.blog_setting.title }}</p>
-
-<h2>Link List Setting</h2>
-<p>{{ section.settings.link_list_setting.title }}</p>
-
-<h2 style="text-align:{{ section.settings.alignment_setting }}">Text Alignment Setting</h2>
-
-<h2>Font Picker</h2>
-<p>{{ section.setting.font_picker_setting.family }}</p>
-
-<style>
-    {{ section.settings.font_picker_setting| font_face: font_display: 'swap' }}
-
-    .section-tutorial * {
-  font-family: {{ section.settings.font_picker_setting.family }}
-  }
-</style>
-
-{% for block in section.blocks %}
-  {% if block.type == 'section_product' %}
-    {% assign product = block.settings.product %}
+{# Break and continue #}
+{% for i in (1..10) %}
+  {% if i == 5 %}
+    {% continue %}
   {% endif %}
-  <p>Block Section</p>
-  {{ block.settings.product.featured_image | image_url: width: 250 | image_tag }}
+  {{ i }}
+  {% if i == 7 %}
+    {% break %}
+  {% endif %}
+{% endfor %} {# Output: 123467 #}
+
+{# Looping through an arbitrary range #}
+{% for i in (start..end) %}
+  {{ i }}
 {% endfor %}
 
-{% schema %}
-{
-  "name": "Section Tutorial",
-  "tag": "div",
-  "class": "section-tutorial",
-  "limit": 2,
-  "settings": [
-    {
-      "type": "text",
-      "id": "text_setting",
-      "label": "Theme Setting",
-      "default": "This is a setting",
-      "info": "This is helper text"
-    },
-    {
-      "type": "textarea",
-      "id": "textarea_setting",
-      "label": "Text Area Setting"
-    },
-    {
-      "type": "richtext",
-      "id": "richtext_setting",
-      "label": "Richtext Setting"
-    },
-    {
-      "type": "number",
-      "id": "number_setting",
-      "label": "Number Setting"
-    },
-    {
-      "type": "range",
-      "id": "range_setting",
-      "label": "Range Setting",
-      "min": 50,
-      "max": 150,
-      "step": 5,
-      "unit": "px",
-      "default": 50
-    },
-    {
-      "type": "select",
-      "id": "select_setting",
-      "label": "Select Setting",
-      "options": [
-        {
-          "value": "value-1",
-          "label": "Value 1"
-        },
-        {
-          "value": "value-2",
-          "label": "Value 2"
-        },
-        {
-          "value": "value-3",
-          "label": "Value 3"
-        }
-      ]
-    },
-    {
-      "type": "checkbox",
-      "id": "checkbox_setting",
-      "label": "Checkbox Setting",
-      "default": true
-    },
-    {
-      "type": "radio",
-      "id": "radio_setting",
-      "label": "Radio Setting",
-      "options": [
-        {
-          "value": "value-1",
-          "label": "Value 1"
-        },
-        {
-          "value": "value-2",
-          "label": "Value 2"
-        },
-        {
-          "value": "value-3",
-          "label": "Value 3"
-        }
-      ]
-    },
-    {
-      "type": "color",
-      "id": "color_setting",
-      "label": "Color Setting"
-    },
-    {
-      "type": "color_background",
-      "id": "color_background_setting",
-      "label": "Color Background Setting"
-    },
-    {
-      "type": "image_picker",
-      "id": "image_picker_setting",
-      "label": "Image Picker"
-    },
-    {
-      "type": "video",
-      "id": "video_setting",
-      "label": "Video Picker"
-    },
-    {
-      "type": "video_url",
-      "id": "video_url_setting",
-      "label": "Video URL Picker",
-      "accept": ["youtube", "vimeo"]
-    },
-    {
-      "type": "url",
-      "id": "url_setting",
-      "label": "URL Setting"
-    },
-    {
-      "type": "html",
-      "id": "html_setting",
-      "label": "HTML Setting"
-    },
-    {
-      "type": "liquid",
-      "id": "liquid_setting",
-      "label": "Liquid Setting"
-    },
-    {
-      "type": "product",
-      "id": "product_setting",
-      "label": "Product Setting"
-    },
-    {
-      "type": "product_list",
-      "id": "product_list_setting",
-      "label": "Product List Settings"
-    },
-    {
-      "type": "collection",
-      "id": "collection_setting",
-      "label": "Collection Setting"
-    },
-    {
-      "type": "collection_list",
-      "id": "collection_list_setting",
-      "label": "Collection List Setting"
-    },
-    {
-      "type": "page",
-      "id": "page_setting",
-      "label": "Page Setting"
-    },
-    {
-      "type": "article",
-      "id": "article_setting",
-      "label": "Article Setting"
-    },
-    {
-      "type": "blog",
-      "id": "blog_setting",
-      "label": "Blog Setting"
-    },
-    {
-      "type": "link_list",
-      "id": "link_list_setting",
-      "label": "Link List Setting"
-    },
-    {
-      "type": "text_alignment",
-      "id": "alignment_setting",
-      "label": "Text Alignment Setting",
-      "default": "center"
-    },
-    {
-      "type": "font_picker",
-      "id": "font_picker_setting",
-      "label": "Font Picker",
-      "default": "assistant_n4"
+{# Paginate #}
+{% paginate collection.products by 5 %}
+  {% for product in collection.products %}
+    {{ product.title }}
+  {% endfor %}
+  {% if paginate.previous %}
+    <a href="{{ paginate.previous.url }}">Previous</a>
+  {% endif %}
+  {% if paginate.next %}
+    <a href="{{ paginate.next.url }}">Next</a>
+  {% endif %}
+{% endpaginate %}
+
+{# Filters #}
+{{ "hello" | upcase }} {# Output: HELLO #}
+
+{# Arithmetic filters #}
+{{ 10 | plus: 5 }} {# Output: 15 #}
+
+{# Converting a string to a number #}
+{{ "42" | plus: 0 }} {# Output: 42 #}
+
+{# The modulo filter #}
+{{ 10 | modulo: 3 }} {# Output: 1 #}
+
+{# The absolute value filter #}
+{{ -5 | abs }} {# Output: 5 #}
+
+{# Rounding filters #}
+{{ 3.5 | round }} {# Output: 4 #}
+
+{# At most and at least filters #}
+{{ 100 | at_most: 50 }} {# Output: 50 #}
+
+{# String filters #}
+{{ "hello" | append: ", world!" }} {# Output: hello, world! #}
+
+{# Casing filters #}
+{{ "hello" | capitalize }} {# Output: Hello #}
+
+{# The append filter #}
+{{ "hello" | append: ", world!" }} {# Output: hello, world! #}
+
+{# Filters order #}
+{{ "hello" | append: ", world!" | upcase }} {# Output: HELLO, WORLD! #}
+
+{# The strip filter #}
+{{ "  hello  " | strip }} {# Output: hello #}
+
+{# The strip html filter #}
+{{ "<p>hello</p>" | strip_html }} {# Output: hello #}
+
+{# The truncate filters #}
+{{ "hello world" | truncate: 5 }} {# Output: hello... #}
+
+{# The newline_to_br filter #}
+{{ "hello\nworld" | newline_to_br }} {# Output: hello<br>world #}
+
+{# The replace and remove filters #}
+{{ "hello world" | replace: "world", "universe" }} {# Output: hello universe #}
+
+{# Creating arrays, the split filter #}
+{% assign fruits = "apple,banana,cherry" | split: "," %}
+{% for fruit in fruits %}
+  {{ fruit }}
+{% endfor %} {# Output: apple banana cherry #}
+
+{# Array filters #}
+{% assign numbers = "1,2,3,4,5" | split: "," %}
+{{ numbers | join: "-" }} {# Output: 1-2-3-4-5 #}
+
+{# The map filter #}
+{% assign fruits = "apple,banana,cherry" | split: "," %}
+{{ fruits | map: "size" }} {# Output: 5,6,6 #}
+
+{# The join filter #}
+{% assign fruits = "apple,banana,cherry" | split: "," %}
+{{ fruits | join: ", " }} {# Output: apple, banana, cherry #}
+
+{# The reverse filter #}
+{{ "hello" | reverse }} {# Output: olleh #}
+
+{# The first, last, and size filters #}
+{{ numbers | first }} {# Output: 1 #}
+{{ numbers | last }} {# Output: 5 #}
+{{ numbers | size }} {# Output: 5 #}
+
+{# The sort filter #}
+{{ numbers | sort }} {# Output: 1,2,3,4,5 #}
+
+{# The sum filter #}
+{{ numbers | split: "," | map: "to_number" | sum }} {# Output: 15 #}
+
+{# The where filter #}
+{% assign numbers = "1,2,3,4,5" | split: "," %}
+{{ numbers | where: "number", "even" }} {# Output: 2,4 #}
+
+{# The uniq filter #}
+{{ numbers | uniq }} {# Output: 1,2,3,4,5 #}
+
+{# Shopify specific filters #}
+{{ product | json }} {# Output: {"title": "Product Name", "price": 10.00} #}
+
+{# The default filter #}
+{{ undefined_var | default: "default value" }} {# Output: default value #}
+
+{# The highlight filter #}
+{{ "hello" | highlight: "lo" }} {# Output: he<mark>lo</mark> #}
+
+{# The date filter #}
+{{ "now" | date: "%Y-%m-%d" }} {# Output: Current date in YYYY-MM-DD format #}
+
+{# Color filters #}
+{{ "#ff0000" | color_hex_to_rgb }} {# Output: 255,0,0 #}
+
+{# The color_darken and color_lighten filters #}
+{{ "#ff0000" | color_darken: 20 }} {# Output: #990000 #}
+
+{# The color_mix filter #}
+{{ "#ff0000" | color_mix: "#0000ff", 50 }} {# Output: #7f007f #}
+
+{# The color format convert filters #}
+{{ "#ff0000" | color_to_hsl }} {# Output: hsl(0, 100%, 50%) #}
+
+{# The color contrast filter #}
+{{ "#ff0000" | color_contrast }} {# Output: dark #}
+
+{# Image filters #}
+
+{# Generate URL to a resized image #}
+{{ "example.jpg" | img_url: "500x500" }}
+{# Output: URL to a resized image #}
+
+{# Display resized image with alt text #}
+{{ "example.jpg" | img_url: "500x500" | img_tag: "Resized Image" }}
+{# Output: <img src="URL" alt="Resized Image"> #}
+
+{# Display resized image with alt text and additional attributes #}
+{{ "example.jpg" | img_url: "500x500" | img_tag: "Resized Image", class: "img-fluid", title: "Resized Image" }}
+{# Output: <img src="URL" alt="Resized Image" class="img-fluid" title="Resized Image"> #}
+
+
+{# Accessing files from the assets folder #}
+{{ 'logo.png' | asset_url }}
+
+{# The liquid tag #}
+{% liquid %}
+  {% assign name = "John" %}
+{% endliquid %}
+
+{# The render tag #}
+{% render 'snippet' %}
+
+{# The render tag with argument #}
+{% render 'product', product: product %}
+
+
+
+{% comment %} FROM SHOPIFYS SITE {% endcomment %}
+
+
+### HTML Tags
+{% form %}
+  This tag is used to render HTML form elements with Shopify-specific attributes.
+  Example:
+  {% form 'contact' %}
+    <!-- form fields go here -->
+  {% endform %}
+
+{% style %}
+  This tag is used to render HTML style elements.
+  Example:
+  {% style %}
+    body {
+      background-color: #f0f0f0;
     }
-  ],
-  "blocks": [
-    {
-      "type": "section_product",
-      "name": "Product Block",
-      "settings": [
-        {
-          "type": "product",
-          "label": "Product Block",
-          "id": "product"
-        },
-        {
-          "type": "text",
-          "id": "title",
-          "label": "Title",
-          "info": "Optional, Will override the Products Title if Defined"
-        }
-      ]
+  {% endstyle %}
+
+### Theme Tags
+{% include %}
+  This tag is used to render another template within the current one.
+  Example:
+  {% include 'header' %}
+
+{% javascript %}
+  This tag is used to output JavaScript code.
+  Example:
+  {% javascript %}
+    console.log("Hello, world!");
+  {% endjavascript %}
+
+{% layout %}
+  This tag specifies the layout to use for rendering the current template.
+  Example:
+  {% layout 'default' %}
+
+{% render %}
+  This tag renders a Liquid snippet from within a Liquid template.
+  Example:
+  {% render 'product', product: product %}
+
+{% section %}
+  This tag renders a section of a template.
+  Example:
+  {% section 'sidebar' %}
+
+{% sections %}
+  This tag lists the available sections for a template.
+  Example:
+  {% sections %}
+
+{% stylesheet %}
+  This tag outputs stylesheet code.
+  Example:
+  {% stylesheet %}
+    body {
+      font-family: Arial, sans-serif;
     }
-  ],
-  "presets": [
-    {
-      "name": "Sections Tutorial Test",
-      "settings": {}
-    }
-  ]
-}
-{% endschema %}
+  {% endstylesheet %}
+
+### Iteration Tags
+{% for %}
+  This tag is used to iterate over a collection.
+  Example:
+  {% for product in collections.all.products %}
+    {{ product.title }}
+  {% endfor %}
+
+{% else %}
+  This tag specifies code to execute if no items are found in a loop.
+  Example:
+  {% for product in collections.all.products %}
+    {{ product.title }}
+  {% else %}
+    No products found.
+  {% endfor %}
+
+{% break %}
+  This tag exits a loop prematurely.
+  Example:
+  {% for product in collections.all.products %}
+    {% if product.title == 'Special Product' %}
+      {% break %}
+    {% endif %}
+    {{ product.title }}
+  {% endfor %}
+
+{% continue %}
+  This tag skips the current iteration of a loop.
+  Example:
+  {% for product in collections.all.products %}
+    {% unless product.available %}
+      {% continue %}
+    {% endunless %}
+    {{ product.title }}
+  {% endfor %}
+
+{% cycle %}
+  This tag cycles through a list of values.
+  Example:
+  {% for product in collections.all.products %}
+    <div class="{% cycle 'odd', 'even' %}">
+      {{ product.title }}
+    </div>
+  {% endfor %}
+
+{% paginate %}
+  This tag paginates a collection.
+  Example:
+  {% paginate collections.all.products by 10 %}
+    <!-- pagination code goes here -->
+  {% endpaginate %}
+
+{% tablerow %}
+  This tag creates a table row for each item in a collection.
+  Example:
+  {% tablerow product in collections.all.products %}
+    <td>{{ product.title }}</td>
+  {% endtablerow %}
+
+### Variable Tags
+{% assign %}
+  This tag assigns a value to a variable.
+  Example:
+  {% assign product_count = collections.all.products.size %}
+
+{% capture %}
+  This tag captures the output of a block of code.
+  Example:
+  {% capture my_variable %}
+    This is some content.
+  {% endcapture %}
+
+{% increment %}
+  This tag increments a numeric variable by 1.
+  Example:
+  {% increment counter %}
+
+{% decrement %}
+  This tag decrements a numeric variable by 1.
+  Example:
+  {% decrement counter %}
+
+### Conditional Tags
+{% if %}
+  This tag executes code based on a condition.
+  Example:
+  {% if product.available %}
+    This product is available.
+  {% endif %}
+
+{% elsif %} / {% else %}
+  These tags specify alternative conditions to check.
+  Example:
+  {% if product.price > 100 %}
+    This product is expensive.
+  {% elsif product.price > 50 %}
+    This product is moderately priced.
+  {% else %}
+    This product is affordable.
+  {% endif %}
+
+{% case %} / {% when %}
+  These tags check multiple conditions.
+  Example:
+  {% case product.type %}
+    {% when 'shirt' %}
+      This is a shirt.
+    {% when 'pants' %}
+      This is a pair of pants.
+    {% else %}
+      This is something else.
+  {% endcase %}
+
+{% unless %}
+  This tag executes code if a condition is false.
+  Example:
+  {% unless product.available %}
+    This product is out of stock.
+  {% endunless %}
+
+### Syntax Tags
+
+  This tag adds comments that are not rendered in the output.
+  Example:
+  {% comment %}
+    This is a comment.
+  {% endcomment %}
+
+{% echo %}
+  This tag outputs the contents of a Liquid variable without HTML escaping.
+  Example:
+  {% echo product.description %}
+
+{% liquid %}
+  This tag indicates the start of a Liquid block.
+  Example:
+  {% liquid %}
+    This is a Liquid block.
+  {% endliquid %}
+
+{% raw %}
+  This tag disables Liquid processing within a block of code.
+  Example:
+  {% raw %}
+    {{ product.title }}
+  {% endraw %}
+
+
+{% comment %} FILTERS {% endcomment %}
+
+<!-- Cart Filters -->
+{{ cart.item_count_for_variant }} <!-- Example: Outputs the item count for a specific variant in the cart. -->
+
+<!-- Customer Filters -->
+{{ 'customer_login_link' | customer_login_link }} <!-- Example: Outputs a URL to the customer login page. -->
+{{ 'customer_logout_link' | customer_logout_link }} <!-- Example: Outputs a URL to log out the customer. -->
+{{ 'customer_register_link' | customer_register_link }} <!-- Example: Outputs a URL to the customer registration page. -->
+{{ 'login_button' | login_button }} <!-- Example: Outputs a login button. -->
+
+<!-- Format Filters -->
+{{ 'now' | date: "%Y-%m-%d" }} <!-- Example: Formats the current date. -->
+{{ 'json_string' | json }} <!-- Example: Converts a string to JSON format. -->
+{{ 100 | weight_with_unit: 'g' }} <!-- Example: Formats a weight value with unit. -->
+
+<!-- Localization Filters -->
+{{ 'currency_selector' | currency_selector }} <!-- Example: Outputs a currency selector for the customer. -->
+{{ 'address' | format_address }} <!-- Example: Formats an address according to locale. -->
+{{ 'Hello' | t }} <!-- Example: Translates the string "Hello" to the customer's language. -->
+
+<!-- Metafield Filters -->
+{{ metafield_object | metafield_tag: 'key' }} <!-- Example: Outputs the value of a metafield tag. -->
+{{ metafield_object | metafield_text: 'key' }} <!-- Example: Outputs the value of a metafield as text. -->
+
+<!-- String Filters -->
+{{ 'Hello' | append: ' World!' }} <!-- Example: Appends " World!" to the string "Hello". -->
+{{ 'hello world' | capitalize }} <!-- Example: Capitalizes the first letter of each word. -->
+{{ 'Hello World' | handleize }} <!-- Example: Converts the string to a URL-friendly format. -->
+{{ 'Hello World' | newline_to_br }} <!-- Example: Replaces newlines with <br> tags. -->
+{{ 'apple' | pluralize: 2 }} <!-- Example: Pluralizes the word "apple" based on count. -->
+{{ 'world' | prepend: 'Hello ' }} <!-- Example: Prepends "Hello " to the string "world". -->
+{{ 'hello world' | remove: 'hello ' }} <!-- Example: Removes "hello " from the string "hello world". -->
+{{ 'hello world' | replace: 'world', 'universe' }} <!-- Example: Replaces "world" with "universe". -->
+{{ 'apple,banana,cherry' | split: ',' }} <!-- Example: Splits a comma-separated string into an array. -->
+{{ ' Hello World ' | strip }} <!-- Example: Removes leading and trailing whitespace. -->
+
+<!-- Collection Filters -->
+{{ collections.all | sort_by: 'title' }} <!-- Example: Sorts collections by title. -->
+
+<!-- Default Filters -->
+{{ undefined_variable | default: 'Default Value' }} <!-- Example: Sets a default value if variable is undefined. -->
+
+<!-- HTML Filters -->
+{{ 'text' | link_to: 'https://example.com' }} <!-- Example: Wraps text in an HTML link. -->
+
+<!-- Math Filters -->
+{{ 10 | plus: 5 }} <!-- Example: Adds 5 to the number 10. -->
+
+<!-- Money Filters -->
+{{ 10.99 | money }} <!-- Example: Formats a number as a currency value. -->
+
+<!-- Array Filters -->
+{{ 'apple,banana,cherry' | split: ',' | first }} <!-- Example: Returns the first element of an array. -->
+
+<!-- Color Filters -->
+{{ '#FF0000' | color_to_rgb }} <!-- Example: Converts a hex color code to RGB. -->
+
+<!-- Font Filters -->
+{{ 'font_family' | font_face }} <!-- Example: Outputs CSS font-face declaration. -->
+
+<!-- Hosted file Filters -->
+{{ 'file_name' | asset_url }} <!-- Example: Returns URL for the specified asset. -->
+
+<!-- Media Filters -->
+{{ 'product_image.jpg' | img_url }} <!-- Example: Returns URL for the specified image. -->
+
+<!-- Payment Filters -->
+{{ 'credit_card' | payment_type_img_url }} <!-- Example: Returns URL for payment type image. -->
